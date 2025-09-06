@@ -18,7 +18,7 @@ class AppConstants {
       (Platform.isAndroid) ? "appzetotaxi" : "ios firebase project id";
 
   static String mapKey = (Platform.isAndroid)
-      ? "AIzaSyB6bh3nVmrdYQJhXfG0ykL3d1ty5scHbRA"
+      ? "AIzaSyBU0q-tyWYzB_m-sjtzoxiouTriKa-PJBA"
       : 'ios map key';
   static const String privacyPolicy = 'your privacy policy url';
   static const String termsCondition = 'your terms and condition url';

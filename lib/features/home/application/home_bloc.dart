@@ -1820,6 +1820,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           waitingTimeAfterStart = 0;
           updateFirebaseData();
           isLoading = false;
+          
+          // Generate polyline from driver's current location to pickup location after accepting ride
+          if (currentLatLng != null && userData!.onTripRequest != null) {
+            add(PolylineEvent(
+                pickLat: currentLatLng!.latitude,
+                pickLng: currentLatLng!.longitude,
+                dropLat: userData!.onTripRequest!.pickLat,
+                dropLng: userData!.onTripRequest!.pickLng,
+                stops: [],
+                packageName: AppConstants.packageName,
+                signKey: AppConstants.signKey,
+                pickAddress: userData!.onTripRequest!.pickAddress,
+                dropAddress: userData!.onTripRequest!.pickAddress,
+                isTripEndCall: false));
+          }
         } else {
           userData!.metaRequest = null;
           polyline.clear();
@@ -1857,9 +1872,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       (success) async {
         FirebaseDatabase.instance.ref('requests').child(event.requestId).update(
             {'trip_arrived': '1', 'modified_by_driver': ServerValue.timestamp});
-        polyline.clear();
-        polygons.clear();
-        fmpoly.clear();
+        // Don't clear polyline when arriving - keep showing route to pickup location
+        // polyline.clear();
+        // polygons.clear();
+        // fmpoly.clear();
         isLoading = false;
         emit(LoadingStopState());
         emit(UpdateState());
